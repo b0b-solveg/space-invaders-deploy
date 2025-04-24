@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Space Invaders</title>
+  <style>
+    body {
+      background: black;
+      margin: 0;
+      font-family: sans-serif;
+      text-align: center;
+      color: white;
+    }
+    canvas {
+      display: block;
+      margin: 0 auto;
+      background: #000;
+      border: 2px solid white;
+    }
+  </style>
+</head>
+<body>
+  <h1>🚀 Space Invaders</h1>
+  <canvas id="gameCanvas" width="600" height="600"></canvas>
+  <script>
+    window.onload = function () {
+      const canvas = document.getElementById("gameCanvas");
+      const ctx = canvas.getContext("2d");
+
+      const playerImg = new Image();
+      const alienImg = new Image();
+      playerImg.src = "player.png";
+      alienImg.src = "alien.png";
+
+      const player = { x: 275, y: 530, width: 50, height: 50, speed: 5 };
+      const aliens = [];
+      for (let i = 0; i < 5; i++) {
+        aliens.push({ x: 60 * i + 60, y: 60, width: 40, height: 40 });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (playerImg.complete) ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
+        if (alienImg.complete) {
+          aliens.forEach(a => ctx.drawImage(alienImg, a.x, a.y, a.width, a.height));
+        }
+      }
+
+      function gameLoop() {
+        draw();
+        requestAnimationFrame(gameLoop);
+      }
+
+      Promise.all([
+        new Promise(res => playerImg.onload = res),
+        new Promise(res => alienImg.onload = res)
+      ]).then(() => {
+        gameLoop();
+      });
+    };
+  </script>
+</body>
+</html>
